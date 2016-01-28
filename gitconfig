@@ -1,0 +1,9 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+name = Lorcan McDonald
+email = lorcan@lorcanmcdonald.com
+[push]
+	default = matching
+[vogue]
+	disable = cabal
