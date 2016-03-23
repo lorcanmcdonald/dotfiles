@@ -1,6 +1,8 @@
 execute pathogen#infect()
 
-autocmd BufNewFile,BufReadPost mutt*,.followup set textwidth=78
+autocmd BufNewFile,BufReadPost mutt*,.followup,COMMIT_EDITMSG set textwidth=78
+autocmd BufNewFile,BufReadPost mutt*,.followup,COMMIT_EDITMSG set spell
+
 filetype indent on
 filetype on
 filetype plugin on
@@ -29,7 +31,7 @@ set scrolloff=10
 set shiftwidth=2
 set softtabstop=2
 set mouse=a
-set suffixesadd=.coffee,.js
+set suffixesadd=.coffee,.js,.jsx
 
 set tabstop=4
 set title
@@ -101,7 +103,9 @@ let g:syntastic_css_checkers = ['csslint']
 let g:syntastic_coffee_checkers = ['coffeelint', 'coffee']
 let g:syntastic_coffee_coffeelint_args = "--csv --file /Users/lorcan/repos/ServiceFrame/tools/coffeelint-diff/coffeelint-config.json"
 " let g:syntastic_haskell_checkers = [ 'hdevtools', 'ghc_mod', 'hlint', 'scan' ]
-let g:syntastic_haskell_checkers = [ 'ghc_mod', 'hlint', 'scan' ]
+let g:syntastic_haskell_checkers = [ 'hdevtools', 'hlint', 'scan' ]
+" let g:syntastic_haskell_checkers = [ 'ghc_mod', 'hlint', 'scan' ]
+let g:syntastic_yaml_checkers = [ 'js-yaml' ]
 let g:syntastic_less_checkers = [ 'lessc' ]
 let g:syntastic_json_checkers = [ 'jsonlint' ]
 " let g:syntastic_haskell_checkers = [ 'hdevtools', 'hlint', 'scan' ]
@@ -139,6 +143,16 @@ fu! CatSnippet()
     setlocal ft=html
 endfu
 
+fu! ReactSnippet()
+
+    if has("win16") || has("win32") || has("win64")
+        sil %!"cat C:\cygwin\home\ieu71762\.vim\snippets\template.dojo.js"
+    else
+        sil %read ~/.vim/snippets/template.react.js
+    endif
+    setlocal ft=javascript
+endfu
+
 fu! DojoSnippet()
 
     if has("win16") || has("win32") || has("win64")
@@ -149,7 +163,7 @@ fu! DojoSnippet()
     setlocal ft=javascript
 endfu
 command! RunCatSnippet call CatSnippet()
-command! RunDojoSnippet call DojoSnippet()
+command! RunReactSnippet call ReactSnippet()
 command! DumpToCouch call DoDumpTextToCouch()
 
 command! -nargs=+ -complete=shellcmd RunPreview call DoRunPreview("<args>")
@@ -192,8 +206,6 @@ vim.command(commandLine)
 EOF
 
 endfu
-" Insert time stamp
-map <Leader>tt :r! date<CR>
 
 nmap <Leader>p :set paste!<CR>:set paste?<CR>
 
@@ -284,7 +296,7 @@ map <Leader>s{ vi{:sort<cr>
 map <Leader>th :RunCatSnippet<CR>
 map <Leader>tserif ifont-family: 'Century Schoolbook', Century, Garamond, serif<ESC>
 map <Leader>tsans ifont-family: Helvetica, Arial, sans-serifi<ESC>
-map <Leader>td :RunDojoSnippet<CR>
+map <Leader>tr :RunReactSnippet<CR>
 
 map <Leader>h :set list!<CR>
 
@@ -328,8 +340,10 @@ nmap <C-S-Tab> :tabp<CR>
 map <Leader>l :call LogLine()<CR>
 
 command! -nargs=+ -complete=shellcmd RunInTmux call RunInTmux("<args>")
+command! -nargs=+ -complete=shellcmd TestInTmux call TestInTmux("<args>")
 map <Leader>w :RunInTmux 
 map <Leader>ww :call RerunCode()<CR>
+map <Leader>tt :call TestCode()<CR>
 
 " nmap <Leader>py :%!copycloud<CR>u
 " nmap <Leader>pp :read !pastecloud<CR>
@@ -420,6 +434,26 @@ vim.command(command)
 EOF
 endfu
 
+fu! TestCode()
+python << EOF
+import vim
+filetype = vim.eval('&filetype')
+rerunCommands = { ''           :  'call RunInTmux(@%)'
+                , 'javascript' :  'call RunInTmux("npm test")'
+                , 'coffee'     :  'call RunInTmux("npm test")'
+                , 'haskell'    :  'call RunInTmux("cabal test")'
+                , 'cabal'      :  'call RunInTmux("cabal test")'
+                }
+try:
+    command = rerunCommands[filetype]
+except:
+    command = rerunCommands['']
+
+vim.command(command)
+
+EOF
+endfu
+
 fu! ReloadChrome()
     if has('win32')
         :!start C:\Users\LorcanMcDonald\scripts\autohotkey\focus-reload-chrome.exe
@@ -427,10 +461,10 @@ fu! ReloadChrome()
 python << EOF
 from subprocess import call
 browser_command = """
-tell application "Google Chrome Canary" to tell the active tab of its first window
+tell application "Google Chrome" to tell the active tab of its first window
     reload
 end tell
-tell application "Google Chrome Canary" to activate
+tell application "Google Chrome" to activate
 """
 call(['osascript', '-e', browser_command])
 EOF
@@ -638,4 +672,12 @@ endif
 
 nmap <Leader><Tab> :TagbarToggle<CR>
 
+map <silent> tw :GhcModTypeInsert<CR>
+map <silent> ts :GhcModSplitFunCase<CR>
+map <silent> tq :GhcModType<CR>
+map <silent> te :GhcModTypeClear<CR>
+
 autocmd BufEnter *.hs set formatprg=pointfree\ --stdin
+
+set colorcolumn=80
+set relativenumber
