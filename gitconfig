@@ -7,3 +7,24 @@ email = lorcan@lorcanmcdonald.com
 	default = matching
 [vogue]
 	disable = cabal
+
+[core]
+    packedGitLimit = 128m
+    packedGitWindowSize = 128m
+
+[pack]
+    deltaCacheSize = 128m
+    packSizeLimit = 128m
+    windowMemory = 128m
+[interactive]
+	diffFilter = diff-highlight
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[alias]
+	d = difftool
+	recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format=\"%(refname:short)\"
+[merge]
+    tool = vimdiff
+    conflictstyle = diff3
