@@ -1,0 +1,9 @@
+.DS_Store
+**/tags
+vim/tmp/
+vim/undo/
+vim/sessions
+vim/.VimballRecord
+vim/.netrwhist
+
+
