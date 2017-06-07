@@ -1,7 +1,7 @@
 execute pathogen#infect()
 
-autocmd BufNewFile,BufReadPost mutt*,.followup,COMMIT_EDITMSG set textwidth=78
-autocmd BufNewFile,BufReadPost mutt*,.followup,COMMIT_EDITMSG set spell
+autocmd BufNewFile,BufReadPost mutt*,.followup,COMMIT_EDITMSG,*.md set textwidth=78
+autocmd BufNewFile,BufReadPost mutt*,.followup,COMMIT_EDITMSG,*.md set spell
 
 filetype indent on
 filetype on
@@ -44,7 +44,6 @@ fu! One()
   return ""
 endfu
 
-" set relativenumber
 fu! StatusLine()
     "%#errormsg#%{&ff!="unix"?"[".&ff."]":""}%*%#errormsg#%{(&fenc!="utf-8"&&&fenc!="")?"[".&fenc."]":""}%*
     let status_buf = '%#Filename#%f%*%m%r%w%y%{fugitive#statusline()}%#errormsg#%{&ff!="unix"?"[".&ff."]":""}%*%#errormsg#%{One()}%{(&fenc!="utf-8"&&&fenc!="")?"[".&fenc."]":""}%*%=%#errormsg#%{SyntasticStatuslineFlag()}%-40.(%#VimFold#[%p%%][%l,%v])'
@@ -99,22 +98,33 @@ let g:syntastic_warning_symbol='⚠'
 let g:syntastic_stl_format="%E{%e✗}%B{ }%W{%w⚠}"
 
 let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_args = "--rulesdir ~/repos/Infrastructure/web-client/eslint_rules/"
 let g:syntastic_css_checkers = ['csslint']
 let g:syntastic_coffee_checkers = ['coffeelint', 'coffee']
 let g:syntastic_coffee_coffeelint_args = "--csv --file /Users/lorcan/repos/ServiceFrame/tools/coffeelint-diff/coffeelint-config.json"
 " let g:syntastic_haskell_checkers = [ 'hdevtools', 'ghc_mod', 'hlint', 'scan' ]
-let g:syntastic_haskell_checkers = [ 'hdevtools', 'hlint', 'scan' ]
+let g:syntastic_haskell_checkers = [ 'hlint', 'scan' ]
 " let g:syntastic_haskell_checkers = [ 'ghc_mod', 'hlint', 'scan' ]
 let g:syntastic_yaml_checkers = [ 'js-yaml' ]
 let g:syntastic_less_checkers = [ 'lessc' ]
 let g:syntastic_json_checkers = [ 'jsonlint' ]
+let g:syntastic_python_checkers = [ 'flake8', 'python', 'pylint' ]
+let g:syntastic_erlang_checkers = [ 'escript', 'syntaxerl' ]
+let g:syntastic_Dockerfile_checkers = [ 'dockerfile_lint' ]
 " let g:syntastic_haskell_checkers = [ 'hdevtools', 'hlint', 'scan' ]
 let g:syntastic_haskell_scan_args = "-t"
 " let g:syntastic_haskell_hlint_args = "--hint=Default --hint=Dollar --hint=Generalise"
-let g:syntastic_sh_checkers = [ 'bashate', 'sh', 'shellcheck']
+let g:syntastic_sh_checkers = [ 'bashate', 'sh', 'shellcheck' ]
+let g:syntastic_sh_shellcheck_args = "-x"
+let g:syntastic_yaml_checkers = [ 'yamllint', 'jsyaml' ]
+
+let g:syntastic_rust_rustc_exe = 'cargo check'
+let g:syntastic_rust_rustc_fname = ''
+let g:syntastic_rust_rustc_args = '--'
+let g:syntastic_rust_checkers = ['rustc']
 
 function! GetHTML()
-python << EOF
+python3 << EOF
 import vim, BeautifulSoup, urllib
 handle = urllib.urlopen(vim.current.line)
 soup = BeautifulSoup.BeautifulSoup(handle.read())
@@ -192,7 +202,7 @@ fu! DoRunPreview(cmd)
 endfu
 
 fu! OpenHTMLInChrome()
-python << EOF
+python3 << EOF
 import vim
 import re
 
@@ -207,19 +217,39 @@ EOF
 
 endfu
 
+nmap <Leader>uu :read !wordy-uuid<CR>
+
 nmap <Leader>p :set paste!<CR>:set paste?<CR>
 
 "Run as
 nmap <Leader>rp   :set ft=python<CR>:RunPreview python<CR>
 nmap <Leader>rc   :set ft=coffee<CR>:RunPreview sugar<CR>
 nmap <Leader>rh   :set ft=haskell<CR>:RunPreview runhaskell<CR>
-nmap <Leader>rj   :set ft=javascript<CR>:RunPreview bash ~/scripts/js/vimJS.sh<CR>
+nmap <Leader>rj   :set ft=javascript<CR>:RunPreview node<CR>
 nmap <Leader>rdj  :set ft=javascript<CR>:RunPreview bash ~/scripts/js/vimDojoJS.sh<CR>
 nmap <Leader>rjsl :set ft=javascript<CR>:RunPreview bash ~/scripts/js/vimJSLint.sh<CR>
 nmap <Leader>rs   :set ft=scheme<CR>:RunPreview scheme --quiet<CR>
 nmap <Leader>rr   :call RunFile()<CR>
 
 map <Leader>dc :DumpToCouch<CR>
+
+function! ImportHoogle()
+  " get word under cursor into i register
+  normal "iyiw
+  " save current position I mark
+  normal mI
+  " Jump to import statements
+  execute "normal! gg/import\<cr>"
+  execute "normal! gg/^$\<cr>"
+  normal k
+
+  " Insert the result from Hoogle
+  execute "r !set +e; hoogle " . @I . "| head -1 | awk '{print \"import \"$1\" (\"$2\")\"}'"
+  call FormatCode()
+  normal 'I
+endfu
+
+nmap <Leader>i :call ImportHoogle()<CR>
 
 " Quickly edit/reload the vimrc file
 nmap <silent> <Leader>ev :e $MYVIMRC<CR>
@@ -230,14 +260,15 @@ map <Leader>ee c$<C-R>=<C-R>"<CR>
 vmap <Leader>e c<C-R>=<C-R>"<CR>
 
 "\f - Format commands
-
-
 fu! FormatCode()
-python << EOF
+python3 << EOF
 import vim
 filetype = vim.eval('&filetype')
 formatCommands = { ''           :  'ggVG='
                  , 'haskell'    :  ':%!stylish-haskell'
+                 , 'c'          :  ':%!clang-format'
+                 , 'cpp'        :  ':%!clang-format'
+                 , 'javascript' :  ':%!eslint-fix'
                  }
 try:
     command = formatCommands[filetype]
@@ -248,6 +279,11 @@ vim.command(command)
 
 EOF
 endfu
+
+" autocmd bufwrite *.js silent call FormatCode()
+" autocmd bufwrite *.hs silent call FormatCode()
+" autocmd bufwrite *.c silent call FormatCode()
+" autocmd bufwrite *.h silent call FormatCode()
 
 "Format an xml doc
 vmap <Leader>/ :Tabularize /
@@ -263,6 +299,9 @@ map <Leader>fj :setlocal ft=javascript<CR>:%!omnipretty<CR>
 map <Leader>fp :%!omnipretty<CR>
 
 vmap <Leader>ss :sort<CR>
+
+map <Leader>s{ vi}:s/,*$/,/<CR>vi}:sort<CR>/}<CR>?,<CR>x
+map <Leader>s} vi}:s/,*$/,/<CR>vi}:sort<CR>/}<CR>?,<CR>x
 
 map <A-C-Left> <<
 map <A-C-Right> >>
@@ -297,8 +336,8 @@ map <Leader>th :RunCatSnippet<CR>
 map <Leader>tserif ifont-family: 'Century Schoolbook', Century, Garamond, serif<ESC>
 map <Leader>tsans ifont-family: Helvetica, Arial, sans-serifi<ESC>
 map <Leader>tr :RunReactSnippet<CR>
-
-map <Leader>h :set list!<CR>
+map <Leader>h :set list!<CR> 
+set listchars=eol:␤,tab:␉▄,trail:⚈
 
 "\w - Wrap commands
 " \w<c> -- Wrap text in char
@@ -316,6 +355,11 @@ map   <Leader>w'     i'<ESC>gpi'<ESC>
 
 let g:CommandTFileScanner="git"
 map <Leader><Space> :CommandT<CR>
+" let g:unite_source_history_yank_enable = 1
+" " call unite#filters#matcher_default#use( ['matcher_default',
+" 'matcher_hide_hidden_files', 'matcher_hide_current_file', 'matcher_fuzzy'])
+" call unite#filters#sorter_default#use(['sorter_selecta'])
+" map <Leader><Space> :Unite -buffer-name=files   -start-insert file_rec/async:!<CR>
 
 " let g:unite_source_history_yank_enable=1
 " call unite#filters#matcher_default#use(['matcher_fuzzy'])
@@ -370,19 +414,18 @@ map <F6> [c
 map <F7> :diffget<CR>
 map <F8> :diffthis<CR>:wincmd w<CR>:diffthis<CR>
 
-" au WinLeave * set nocursorcolumn
-" au WinEnter * set cursorcolumn
+au WinLeave * set nocursorcolumn
+au WinEnter * set cursorcolumn
 
-if has('relativenumber')
-    set relativenumber
-endif
+set number
+set relativenumber
 
 set undofile
 set undodir=~/.vim/undo,C:\tmp
 
 if has('python')
 
-python <<EOF
+python3 <<EOF
 sys.path.append('/home/lorcan/.vim/python')
 sys.path.append('/Users/lorcan/.vim/python')
 
@@ -397,7 +440,7 @@ if &t_Co >= 256 || has("gui_running")
 endif
 
 fu! RunInTmux(command)
-python << EOF
+python3 << EOF
 import vim
 from subprocess import call
 command = vim.eval("a:command")
@@ -408,7 +451,7 @@ EOF
 endfu
 
 fu! RerunCode()
-python << EOF
+python3 << EOF
 import vim
 filetype = vim.eval('&filetype')
 rerunCommands = { ''           :  'call RunInTmux(@%)'
@@ -416,11 +459,14 @@ rerunCommands = { ''           :  'call RunInTmux(@%)'
                 , 'javascript' :  'call ReloadChrome()'
                 , 'coffee'     :  'call ReloadChrome()'
                 , 'stylus'     :  'call ReloadChrome()'
-                , 'less'     :  'call ReloadChrome()'
+                , 'less'       :  'call ReloadChrome()'
                 , 'elm'        :  'call ReloadChrome()'
+                , 'dot'        :  'call RunInTmux("fdp -Tpng -O " . @% . " && open " . @% . ".png")'
                 , 'haskell'    :  'call RunInTmux("cabal build")'
                 , 'cabal'      :  'call RunInTmux("cabal build")'
                 , 'c++'        :  'call RunInTmux("make")'
+                , 'c'          :  'call RunInTmux("make")'
+                , 'make'       :  'call RunInTmux("make")'
                 , 'python'     :  'call RunInTmux("python " . @%)'
                 , 'sh'         :  'call RunInTmux(@%)'
                 }
@@ -435,7 +481,7 @@ EOF
 endfu
 
 fu! TestCode()
-python << EOF
+python3 << EOF
 import vim
 filetype = vim.eval('&filetype')
 rerunCommands = { ''           :  'call RunInTmux(@%)'
@@ -458,13 +504,13 @@ fu! ReloadChrome()
     if has('win32')
         :!start C:\Users\LorcanMcDonald\scripts\autohotkey\focus-reload-chrome.exe
     else
-python << EOF
+python3 << EOF
 from subprocess import call
 browser_command = """
-tell application "Google Chrome" to tell the active tab of its first window
+tell application "Google Chrome Canary" to tell the active tab of its first window
     reload
 end tell
-tell application "Google Chrome" to activate
+tell application "Google Chrome Canary" to activate
 """
 call(['osascript', '-e', browser_command])
 EOF
@@ -475,7 +521,7 @@ fu! RunFile()
     let commands = { "python"     : "python",
                      "coffee"     : "sugar",
                      "haskell"    : "runhaskell",
-                     "javascript" : "bash ~/scripts/js/vimJS.sh",
+                     "javascript" : "node",
                      "scheme"     : "scheme --quiet"
                      }
 
@@ -488,7 +534,7 @@ fu! RunFile()
 endfu
 
 fu! LogLine()
-python << EOF
+python3 << EOF
 
 import vim
 cssColors = [
@@ -520,6 +566,7 @@ loglines = { ''               : '%(indent)sprint(%(line)s)'
            , 'coffee'         : '%(indent)sconsole.log "%(escapedLine)s", %(line)s'
            , 'haskell'        : '%(indent)s(trace (show $ %(escapedLine)s) %(line)s)'
            , 'java'           : '%(indent)sSystem.out.println("%(escapedLine)s        : " + %(line)s)'
+           , 'c'              : '%(indent)sprintf("%%s %%s", "%(escapedLine)s", %(line)s);'
            , 'c++'            : '%(indent)scout << "%(escapedLine)s                   : " << %(line)s'
            , 'python'         : '%(indent)sprint("%(escapedLine)s", %(line)s)'
            , 'sh'             : '%(indent)secho \'%(line)s\' %(line)s'
@@ -563,7 +610,7 @@ call matchadd("Trailing", "\\t")
 xmap <Leader>c  <Plug>Commentary
 nmap <Leader>c  <Plug>Commentary
 nmap <Leader>cc <Plug>CommentaryLine
-
+set tags=tags;/,codex.tags;/
 au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 if executable('coffeetags')
   let g:tagbar_type_coffee = {
@@ -622,7 +669,7 @@ function! IndentLevel(lnum)
 endfunction
 
 fu! CoffeeFoldLevel(line)
-python <<EOF
+python3 <<EOF
 import vim
 import re
 from random import randint
@@ -652,7 +699,7 @@ if $TMUX == ''
 endif
 
 fu! DoOpenInGithub(filename)
-python <<EOF
+python3 <<EOF
 import os
 import vim
 f=vim.eval("a:filename")
@@ -677,7 +724,16 @@ map <silent> ts :GhcModSplitFunCase<CR>
 map <silent> tq :GhcModType<CR>
 map <silent> te :GhcModTypeClear<CR>
 
+autocmd BufWritePost *.hs GhcModCheckAndLintAsync
 autocmd BufEnter *.hs set formatprg=pointfree\ --stdin
 
 set colorcolumn=80
-set relativenumber
+
+" python3 from powerline.vim import setup as powerline_setup
+" python3 powerline_setup()
+" python3 del powerline_setup
+
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g'\"" | endif
+endif
