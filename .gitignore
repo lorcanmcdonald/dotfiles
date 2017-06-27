@@ -5,5 +5,4 @@ vim/undo/
 vim/sessions
 vim/.VimballRecord
 vim/.netrwhist
-
-
+vim/plugged/

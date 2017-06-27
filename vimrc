@@ -264,11 +264,11 @@ fu! FormatCode()
 python3 << EOF
 import vim
 filetype = vim.eval('&filetype')
-formatCommands = { ''           :  'ggVG='
-                 , 'haskell'    :  ':%!stylish-haskell'
+formatCommands = { ''           :  ':Neoformat'
+                 , 'haskell'    :  ':Neoformat'
                  , 'c'          :  ':%!clang-format'
                  , 'cpp'        :  ':%!clang-format'
-                 , 'javascript' :  ':%!eslint-fix'
+                 , 'javascript' :  ':Neoformat'
                  }
 try:
     command = formatCommands[filetype]
@@ -737,3 +737,7 @@ if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal! g'\"" | endif
 endif
+
+call plug#begin('~/.vim/plugged')
+Plug 'sbdchd/neoformat'
+call plug#end()
