@@ -268,7 +268,7 @@ formatCommands = { ''           :  ':Neoformat'
                  , 'haskell'    :  ':Neoformat'
                  , 'c'          :  ':%!clang-format'
                  , 'cpp'        :  ':%!clang-format'
-                 , 'javascript' :  ':Neoformat'
+#                 , 'javascript' :  ':Neoformat'
                  }
 try:
     command = formatCommands[filetype]
@@ -279,6 +279,15 @@ vim.command(command)
 
 EOF
 endfu
+
+augroup fmt
+  autocmd!
+  " autocmd BufWritePre *.js Neoformat prettier
+  " autocmd BufWritePre *.jsx Neoformat prettier
+  autocmd BufWritePre *.hs Neoformat
+  autocmd BufWritePre *.c Neoformat
+  autocmd BufWritePre *.h Neoformat
+augroup END
 
 " autocmd bufwrite *.js silent call FormatCode()
 " autocmd bufwrite *.hs silent call FormatCode()
@@ -740,4 +749,5 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'sbdchd/neoformat'
+Plug 'johngrib/vim-game-code-break'
 call plug#end()
