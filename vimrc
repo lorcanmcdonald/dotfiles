@@ -464,7 +464,7 @@ rerunCommands = { ''           :  'call RunInTmux(@%)'
                 , 'stylus'     :  'call ReloadChrome()'
                 , 'less'       :  'call ReloadChrome()'
                 , 'elm'        :  'call ReloadChrome()'
-                , 'dot'        :  'call RunInTmux("fdp -Tpng -O " . @% . " && open " . @% . ".png")'
+                , 'dot'        :  'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
                 , 'haskell'    :  'call RunInTmux("cabal build")'
                 , 'cabal'      :  'call RunInTmux("cabal build")'
                 , 'c++'        :  'call RunInTmux("make")'
@@ -472,6 +472,7 @@ rerunCommands = { ''           :  'call RunInTmux(@%)'
                 , 'make'       :  'call RunInTmux("make")'
                 , 'python'     :  'call RunInTmux("python " . @%)'
                 , 'sh'         :  'call RunInTmux(@%)'
+                , 'markdown'   :  'call RunInTmux("pandoc -c ~/.vim/opt/pandoc.css -f markdown -t html -o " . @% . ".html " . @% . " && open " . @% . ".html")'
                 }
 try:
     command = rerunCommands[filetype]
