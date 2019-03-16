@@ -3,8 +3,10 @@
 # shellcheck source=~/.bashrc
 source $HOME/.bashrc
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-  . $(brew --prefix)/etc/bash_completion
+if which brew; then
+  if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+  fi
 fi
 
 alias docker-env='eval $(docker-machine env default)'
