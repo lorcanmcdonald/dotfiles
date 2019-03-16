@@ -11,6 +11,7 @@ email = lorcan@lorcanmcdonald.com
 [core]
     packedGitLimit = 128m
     packedGitWindowSize = 128m
+	excludesfile = /Users/lorcan.mcdonald/.gitignore_global
 
 [pack]
     deltaCacheSize = 128m
@@ -28,3 +29,9 @@ email = lorcan@lorcanmcdonald.com
 [merge]
     tool = vimdiff
     conflictstyle = diff3
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Users/lorcan.mcdonald/Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true

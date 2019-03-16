@@ -23,6 +23,7 @@ alias chrome-canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Goo
 set -o vi
 
 export PATH="$PATH:$HOME/scripts/bin"
+export PATH="$PATH:$HOME/bin"
 
 # added by Anaconda3 2.5.0 installer
 # export PATH="//anaconda/bin:$PATH"

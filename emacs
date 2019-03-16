@@ -1,12 +1,12 @@
-;;; package --- Emacs settings
-;;; Commentary:
+; ;;; package --- Emacs settings
+; ;;; Commentary:
 (require 'package)
 
 ;;; Code:
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 (package-initialize)
 
@@ -15,18 +15,18 @@
 
 (menu-bar-mode -1)
 
-(require 'evil-leader)
-(evil-leader/set-leader ",")
-(global-evil-leader-mode)
-(evil-leader/set-key "e" 'find-file)
-(evil-leader/set-key "l" 'lorcan/log-line)
-;; (add-hook 'coffee-mode-hook
-;;   (function (lambda ()
-;;           (setq evil-shift-width 2))))
-
 (require 'evil)
 (evil-mode 1)
 (define-key evil-motion-state-map "\t" nil)
+
+ (require 'evil-leader)
+ (evil-leader/set-leader ",")
+ (global-evil-leader-mode)
+ (evil-leader/set-key "e" 'find-file)
+ (evil-leader/set-key "l" 'lorcan/log-line)
+; (add-hook 'coffee-mode-hook
+;   (function (lambda ()
+;           (setq evil-shift-width 2))))
 
 ;; (require 'rainbow-delimiters)
 ;; (global-rainbow-delimiters-mode)

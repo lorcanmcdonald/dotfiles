@@ -97,6 +97,8 @@ let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
 let g:syntastic_stl_format="%E{%e✗}%B{ }%W{%w⚠}"
 
+let g:fsharp_only_check_errors_on_write=1
+
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_javascript_eslint_args = "--rulesdir ~/repos/Infrastructure/web-client/eslint_rules/"
 let g:syntastic_css_checkers = ['csslint']
@@ -210,7 +212,7 @@ contents = ''.join(vim.current.buffer[:])
 
 escapedContents = re.sub(r'!', r'\!', contents)
 escapedContents = re.sub(r'"', r'\"', escapedContents)
-commandLine = "sil ! open -a \"Google Chrome Canary\" --args 'data:text/html,%s'" % escapedContents
+commandLine = "sil ! open -a \"Google Chrome\" --args 'data:text/html,%s'" % escapedContents
 vim.command(commandLine)
 
 EOF
@@ -269,7 +271,8 @@ formatCommands = { ''           :  ':Neoformat'
                  , 'rust'       :  ':Neoformat'
                  , 'c'          :  ':%!clang-format'
                  , 'cpp'        :  ':%!clang-format'
-                 # , 'javascript' :  ':Neoformat'
+                 , 'javascript' :  ':Neoformat'
+                 , 'typescript' :  ':Neoformat'
                  }
 try:
     command = formatCommands[filetype]
@@ -294,6 +297,10 @@ autocmd bufwrite *.rs silent call FormatCode()
 " autocmd bufwrite *.hs silent call FormatCode()
 " autocmd bufwrite *.c silent call FormatCode()
 " autocmd bufwrite *.h silent call FormatCode()
+autocmd bufwrite *.js silent call FormatCode()
+autocmd bufwrite *.hs silent call FormatCode()
+autocmd bufwrite *.c silent call FormatCode()
+autocmd bufwrite *.h silent call FormatCode()
 
 "Format an xml doc
 vmap <Leader>/ :Tabularize /
@@ -471,6 +478,12 @@ rerunCommands = { ''           :  'call RunInTmux(@%)'
                 , 'coffee'     :  'call ReloadChrome()'
                 , 'dot'        :  'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
                 , 'elm'        :  'call ReloadChrome()'
+<<<<<<< HEAD
+||||||| merged common ancestors
+                , 'dot'        :  'call RunInTmux("fdp -Tpng -O " . @% . " && open " . @% . ".png")'
+=======
+                , 'dot'        :  'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
+>>>>>>> ce4734b0324cceceac113cec2a394c510196bb86
                 , 'haskell'    :  'call RunInTmux("cabal build")'
                 , 'html'       :  'call ReloadChrome()'
                 , 'javascript' :  'call ReloadChrome()'
@@ -479,7 +492,12 @@ rerunCommands = { ''           :  'call RunInTmux(@%)'
                 , 'python'     :  'call RunInTmux("python " . @%)'
                 , 'rust'       :  'call RunInTmux("cargo build")'
                 , 'sh'         :  'call RunInTmux(@%)'
+<<<<<<< HEAD
                 , 'stylus'     :  'call ReloadChrome()'
+||||||| merged common ancestors
+=======
+                , 'markdown'   :  'call RunInTmux("pandoc -c ~/.vim/opt/pandoc.css -f markdown -t html -o " . @% . ".html " . @% . " && open " . @% . ".html")'
+>>>>>>> ce4734b0324cceceac113cec2a394c510196bb86
                 }
 try:
     command = rerunCommands[filetype]
@@ -523,6 +541,7 @@ tell application "Google Chrome" to tell the active tab of its first window
 end tell
 tell application "Google Chrome" to activate
 """
+
 call(['osascript', '-e', browser_command])
 EOF
     endif
