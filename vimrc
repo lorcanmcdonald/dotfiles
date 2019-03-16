@@ -478,12 +478,7 @@ rerunCommands = { ''           :  'call RunInTmux(@%)'
                 , 'coffee'     :  'call ReloadChrome()'
                 , 'dot'        :  'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
                 , 'elm'        :  'call ReloadChrome()'
-<<<<<<< HEAD
-||||||| merged common ancestors
-                , 'dot'        :  'call RunInTmux("fdp -Tpng -O " . @% . " && open " . @% . ".png")'
-=======
                 , 'dot'        :  'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
->>>>>>> ce4734b0324cceceac113cec2a394c510196bb86
                 , 'haskell'    :  'call RunInTmux("cabal build")'
                 , 'html'       :  'call ReloadChrome()'
                 , 'javascript' :  'call ReloadChrome()'
@@ -492,12 +487,8 @@ rerunCommands = { ''           :  'call RunInTmux(@%)'
                 , 'python'     :  'call RunInTmux("python " . @%)'
                 , 'rust'       :  'call RunInTmux("cargo build")'
                 , 'sh'         :  'call RunInTmux(@%)'
-<<<<<<< HEAD
                 , 'stylus'     :  'call ReloadChrome()'
-||||||| merged common ancestors
-=======
                 , 'markdown'   :  'call RunInTmux("pandoc -c ~/.vim/opt/pandoc.css -f markdown -t html -o " . @% . ".html " . @% . " && open " . @% . ".html")'
->>>>>>> ce4734b0324cceceac113cec2a394c510196bb86
                 }
 try:
     command = rerunCommands[filetype]
