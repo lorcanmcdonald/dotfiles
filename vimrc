@@ -266,9 +266,10 @@ import vim
 filetype = vim.eval('&filetype')
 formatCommands = { ''           :  ':Neoformat'
                  , 'haskell'    :  ':Neoformat'
+                 , 'rust'       :  ':Neoformat'
                  , 'c'          :  ':%!clang-format'
                  , 'cpp'        :  ':%!clang-format'
-#                 , 'javascript' :  ':Neoformat'
+                 # , 'javascript' :  ':Neoformat'
                  }
 try:
     command = formatCommands[filetype]
@@ -289,7 +290,7 @@ augroup fmt
   autocmd BufWritePre *.h Neoformat
 augroup END
 
-" autocmd bufwrite *.js silent call FormatCode()
+autocmd bufwrite *.rs silent call FormatCode()
 " autocmd bufwrite *.hs silent call FormatCode()
 " autocmd bufwrite *.c silent call FormatCode()
 " autocmd bufwrite *.h silent call FormatCode()
@@ -464,20 +465,21 @@ python3 << EOF
 import vim
 filetype = vim.eval('&filetype')
 rerunCommands = { ''           :  'call RunInTmux(@%)'
+                , 'c'          :  'call RunInTmux("make")'
+                , 'c++'        :  'call RunInTmux("make")'
+                , 'cabal'      :  'call RunInTmux("cabal build")'
+                , 'coffee'     :  'call ReloadChrome()'
+                , 'dot'        :  'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
+                , 'elm'        :  'call ReloadChrome()'
+                , 'haskell'    :  'call RunInTmux("cabal build")'
                 , 'html'       :  'call ReloadChrome()'
                 , 'javascript' :  'call ReloadChrome()'
-                , 'coffee'     :  'call ReloadChrome()'
-                , 'stylus'     :  'call ReloadChrome()'
                 , 'less'       :  'call ReloadChrome()'
-                , 'elm'        :  'call ReloadChrome()'
-                , 'dot'        :  'call RunInTmux("fdp -Tpng -O " . @% . " && open " . @% . ".png")'
-                , 'haskell'    :  'call RunInTmux("cabal build")'
-                , 'cabal'      :  'call RunInTmux("cabal build")'
-                , 'c++'        :  'call RunInTmux("make")'
-                , 'c'          :  'call RunInTmux("make")'
                 , 'make'       :  'call RunInTmux("make")'
                 , 'python'     :  'call RunInTmux("python " . @%)'
+                , 'rust'       :  'call RunInTmux("cargo build")'
                 , 'sh'         :  'call RunInTmux(@%)'
+                , 'stylus'     :  'call ReloadChrome()'
                 }
 try:
     command = rerunCommands[filetype]
@@ -516,10 +518,10 @@ fu! ReloadChrome()
 python3 << EOF
 from subprocess import call
 browser_command = """
-tell application "Google Chrome Canary" to tell the active tab of its first window
+tell application "Google Chrome" to tell the active tab of its first window
     reload
 end tell
-tell application "Google Chrome Canary" to activate
+tell application "Google Chrome" to activate
 """
 call(['osascript', '-e', browser_command])
 EOF
@@ -579,6 +581,7 @@ loglines = { ''               : '%(indent)sprint(%(line)s)'
            , 'c++'            : '%(indent)scout << "%(escapedLine)s                   : " << %(line)s'
            , 'python'         : '%(indent)sprint("%(escapedLine)s", %(line)s)'
            , 'sh'             : '%(indent)secho \'%(line)s\' %(line)s'
+           , 'rust'           : '%(indent)sdebug!("%(line)s {}", %(line)s);'
            }
 
 filetype = vim.eval('&filetype')
