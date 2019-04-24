@@ -14,7 +14,9 @@ export NVM_DIR="/Users/lorcan/.nvm"
 
 export MELOSITY_ENVIRONMENT_NAME=Development
 export OPTIMIZATION_LEVEL=0
-eval "$(pandoc --bash-completion)"
+if which pandoc; then
+  eval "$(pandoc --bash-completion)"
+fi
 
 # bash: Place this in .bashrc.
 function iterm2_print_user_vars() {
