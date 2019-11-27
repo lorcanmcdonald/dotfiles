@@ -40,3 +40,4 @@ PERL_MM_OPT="INSTALL_BASE=/Users/lorcan/perl5"; export PERL_MM_OPT;
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export KUBECONFIG=$KUBECONFIG:$HOME/.kube/pi-config:$HOME/.kube/config
