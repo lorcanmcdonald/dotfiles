@@ -126,7 +126,7 @@ let g:syntastic_rust_rustc_args = '--'
 let g:syntastic_rust_checkers = ['rustc']
 
 function! GetHTML()
-python << EOF
+python3 << EOF
 import vim, BeautifulSoup, urllib
 handle = urllib.urlopen(vim.current.line)
 soup = BeautifulSoup.BeautifulSoup(handle.read())
@@ -204,7 +204,7 @@ fu! DoRunPreview(cmd)
 endfu
 
 fu! OpenHTMLInChrome()
-python << EOF
+python3 << EOF
 import vim
 import re
 
@@ -263,7 +263,7 @@ vmap <Leader>e c<C-R>=<C-R>"<CR>
 
 "\f - Format commands
 fu! FormatCode()
-python << EOF
+python3 << EOF
 import vim
 filetype = vim.eval('&filetype')
 formatCommands = { ''           :  ':Neoformat'
@@ -442,7 +442,7 @@ set undodir=~/.vim/undo,C:\tmp
 
 if has('python')
 
-python <<EOF
+python3 <<EOF
 sys.path.append('/home/lorcan/.vim/python')
 sys.path.append('/Users/lorcan/.vim/python')
 
@@ -457,7 +457,7 @@ if &t_Co >= 256 || has("gui_running")
 endif
 
 fu! RunInTmux(command)
-python << EOF
+python3 << EOF
 import vim
 from subprocess import call
 command = vim.eval("a:command")
@@ -468,7 +468,7 @@ EOF
 endfu
 
 fu! RerunCode()
-python << EOF
+python3 << EOF
 import vim
 filetype = vim.eval('&filetype')
 rerunCommands = { ''           :  'call RunInTmux(@%)'
@@ -501,7 +501,7 @@ EOF
 endfu
 
 fu! TestCode()
-python << EOF
+python3 << EOF
 import vim
 filetype = vim.eval('&filetype')
 rerunCommands = { ''           :  'call RunInTmux(@%)'
@@ -524,7 +524,7 @@ fu! ReloadChrome()
     if has('win32')
         :!start C:\Users\LorcanMcDonald\scripts\autohotkey\focus-reload-chrome.exe
     else
-python << EOF
+python3 << EOF
 from subprocess import call
 browser_command = """
 tell application "Google Chrome" to tell the active tab of its first window
@@ -555,7 +555,7 @@ fu! RunFile()
 endfu
 
 fu! LogLine()
-python << EOF
+python3 << EOF
 
 import vim
 cssColors = [
@@ -691,7 +691,7 @@ function! IndentLevel(lnum)
 endfunction
 
 fu! CoffeeFoldLevel(line)
-python <<EOF
+python3 <<EOF
 import vim
 import re
 from random import randint
@@ -721,7 +721,7 @@ if $TMUX == ''
 endif
 
 fu! DoOpenInGithub(filename)
-python <<EOF
+python3 <<EOF
 import os
 import vim
 f=vim.eval("a:filename")
