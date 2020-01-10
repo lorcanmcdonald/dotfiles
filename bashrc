@@ -14,7 +14,7 @@ export NVM_DIR="/Users/lorcan/.nvm"
 
 export MELOSITY_ENVIRONMENT_NAME=Development
 export OPTIMIZATION_LEVEL=0
-if which pandoc; then
+if which pandoc > /dev/null; then
   eval "$(pandoc --bash-completion)"
 fi
 
