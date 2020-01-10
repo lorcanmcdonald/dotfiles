@@ -1,3 +1,4 @@
+<style type="text/css">
 /*
  * I add this to html files generated with pandoc.
  */
@@ -326,3 +327,4 @@ table td {
     page-break-after: avoid;
   }
 }
+</style>
