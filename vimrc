@@ -474,12 +474,12 @@ filetype = vim.eval('&filetype')
 rerunCommands = { ''           :  'call RunInTmux(@%)'
                 , 'c'          :  'call RunInTmux("make")'
                 , 'c++'        :  'call RunInTmux("make")'
-                , 'cabal'      :  'call RunInTmux("cabal build")'
+                , 'cabal'      :  'call RunInTmux("cabal v2-build")'
                 , 'coffee'     :  'call ReloadChrome()'
                 , 'dot'        :  'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
                 , 'elm'        :  'call ReloadChrome()'
                 , 'dot'        :  'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
-                , 'haskell'    :  'call RunInTmux("cabal build")'
+                , 'haskell'    :  'call RunInTmux("cabal v2-build")'
                 , 'html'       :  'call ReloadChrome()'
                 , 'javascript' :  'call ReloadChrome()'
                 , 'less'       :  'call ReloadChrome()'
@@ -623,7 +623,7 @@ syntax on
 let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
 
-call matchadd("Error", ",\\_s*[)}\\]]")
+" call matchadd("Error", ",\\_s*[)}\\]]")
 call matchadd("Trailing", "\\s\\s*$")
 call matchadd("Trailing", "\\t")
 
@@ -746,8 +746,8 @@ map <silent> ts :GhcModSplitFunCase<CR>
 map <silent> tq :GhcModType<CR>
 map <silent> te :GhcModTypeClear<CR>
 
-autocmd BufWritePost *.hs GhcModCheckAndLintAsync
-autocmd BufEnter *.hs set formatprg=pointfree\ --stdin
+" autocmd BufWritePost *.hs GhcModCheckAndLintAsync
+" autocmd BufEnter *.hs set formatprg=pointfree\ --stdin
 
 set colorcolumn=80
 
@@ -763,4 +763,5 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'sbdchd/neoformat'
 Plug 'johngrib/vim-game-code-break'
+Plug 'sdiehl/vim-ormolu'
 call plug#end()
