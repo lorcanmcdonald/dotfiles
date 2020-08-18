@@ -4,6 +4,17 @@ IFS=$'\n\t'
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+DOTFILES=("bashrc" \
+  "emacs" \
+  "gitconfig" \
+  "profile" \
+  "stylish-haskell.yaml" \
+  "tmux-osx.conf" \
+  "tmux.conf" \
+  "vim" \
+  "vimrc" \
+  "ghc")
+
 function link_dotfile {
   DOTFILE=$1
   SOURCE="$DIR/$DOTFILE"
@@ -20,7 +31,6 @@ function link_dotfile {
   fi
 }
 
-DOTFILES=("bashrc" "emacs" "gitconfig" "profile" "stylish-haskell.yaml" "tmux-osx.conf" "tmux.conf" "vim" "vimrc")
 
 for DOTFILE in "${DOTFILES[@]}"; do
   link_dotfile "$DOTFILE"

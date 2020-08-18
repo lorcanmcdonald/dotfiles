@@ -3,8 +3,10 @@
 # shellcheck source=~/.bashrc
 source $HOME/.bashrc
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-  . $(brew --prefix)/etc/bash_completion
+if which brew; then
+  if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+  fi
 fi
 
 alias docker-env='eval $(docker-machine env default)'
@@ -31,4 +33,6 @@ export PATH="$PATH:$HOME/bin"
 
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$PATH:$HOME/.cargo/bin"
+export PATH="$HOME/.local/bin:$PATH"
+export EDITOR=vim
