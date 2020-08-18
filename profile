@@ -9,6 +9,7 @@ fi
 
 alias docker-env='eval $(docker-machine env default)'
 alias denv=docker-env
+alias ddev='docker run --rm -ti -v "$(pwd):/home/lorcan/vol" -w /home/lorcan/vol lorcan/dev-machine'
 
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad

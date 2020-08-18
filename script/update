@@ -1,0 +1,10 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+
+docker build \
+  -t lorcan/dev-machine \
+  -t registry.easeof.com:5000/lorcan/dev-machine \
+  "$dir"
