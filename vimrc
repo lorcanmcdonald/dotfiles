@@ -488,7 +488,7 @@ rerunCommands = { ''           :  'call RunInTmux(@%)'
                 , 'rust'       :  'call RunInTmux("cargo build")'
                 , 'sh'         :  'call RunInTmux(@%)'
                 , 'stylus'     :  'call ReloadChrome()'
-                , 'markdown'   :  'call RunInTmux("pandoc -c ~/.vim/opt/pandoc.css -f markdown -t html -o " . @% . ".html " . @% . " && open " . @% . ".html")'
+                , 'markdown'   :  'call RunInTmux("pandoc -s -H ~/.vim/opt/pandoc.css -f markdown -t html -o " . @% . ".html " . @% . " && open " . @% . ".html")'
                 }
 try:
     command = rerunCommands[filetype]
