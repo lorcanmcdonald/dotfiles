@@ -28,7 +28,6 @@ email = lorcan@lorcanmcdonald.com
 	recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format=\"%(refname:short)\"
 [merge]
     tool = vimdiff
-    conflictstyle = diff3
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
