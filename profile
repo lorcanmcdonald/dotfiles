@@ -22,6 +22,8 @@ alias hlint="hlint --hint=Default --hint=Dollar --hint=Generalise"
 
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 alias chrome-canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary"
+alias fst="awk '{print \$1}'"
+alias snd="awk '{print \$2}'"
 
 set -o vi
 
