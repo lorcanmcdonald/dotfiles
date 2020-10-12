@@ -91,16 +91,27 @@ elseif has("win16") || has("win32") || has("win64")
     " set guifont="Source_Code_Pro:h9"
 endif
 
+
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 let g:syntastic_enable_balloons=1
 let g:syntastic_enable_highlighting = 1
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
 let g:syntastic_stl_format="%E{%e✗}%B{ }%W{%w⚠}"
 
-let g:fsharp_only_check_errors_on_write=1
+" let g:fsharp_only_check_errors_on_write=1
 
+let g:syntastic_filetype_map = { "javascriptreact": "javascript" }
 let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_javascript_eslint_args = "--rulesdir ~/repos/Infrastructure/web-client/eslint_rules/"
+" let g:syntastic_javascript_eslint_args = "--rulesdir ~/repos/Infrastructure/web-client/eslint_rules/"
 let g:syntastic_css_checkers = ['csslint']
 let g:syntastic_coffee_checkers = ['coffeelint', 'coffee']
 let g:syntastic_coffee_coffeelint_args = "--csv --file /Users/lorcan/repos/ServiceFrame/tools/coffeelint-diff/coffeelint-config.json"
@@ -298,6 +309,7 @@ autocmd bufwrite *.rs silent call FormatCode()
 " autocmd bufwrite *.c silent call FormatCode()
 " autocmd bufwrite *.h silent call FormatCode()
 autocmd bufwrite *.js silent call FormatCode()
+autocmd bufwrite *.jsx silent call FormatCode()
 autocmd bufwrite *.hs silent call FormatCode()
 autocmd bufwrite *.c silent call FormatCode()
 autocmd bufwrite *.h silent call FormatCode()
@@ -580,18 +592,19 @@ def opposite(cssColor):
 
     return ''.join([ toHex(i) for i in range(0, len(cssColor), n)])
 
-loglines = { ''               : '%(indent)sprint(%(line)s)'
-           , 'html'           : '%(indent)s{{debug "%(escapedLine)s" %(line)s}}'
-           , 'javascript'     : '%(indent)sconsole.log("%(escapedLine)s", %(line)s);'
-           , 'javascript.jsx' : '%(indent)sconsole.log("%(escapedLine)s", %(line)s);'
-           , 'coffee'         : '%(indent)sconsole.log "%(escapedLine)s", %(line)s'
-           , 'haskell'        : '%(indent)s(trace (show $ %(escapedLine)s) %(line)s)'
-           , 'java'           : '%(indent)sSystem.out.println("%(escapedLine)s        : " + %(line)s)'
-           , 'c'              : '%(indent)sprintf("%%s %%s", "%(escapedLine)s", %(line)s);'
-           , 'c++'            : '%(indent)scout << "%(escapedLine)s                   : " << %(line)s'
-           , 'python'         : '%(indent)sprint("%(escapedLine)s", %(line)s)'
-           , 'sh'             : '%(indent)secho \'%(line)s\' %(line)s'
-           , 'rust'           : '%(indent)sdebug!("%(line)s {}", %(line)s);'
+loglines = { ''                : '%(indent)sprint(%(line)s)'
+           , 'html'            : '%(indent)s{{debug "%(escapedLine)s" %(line)s}}'
+           , 'javascript'      : '%(indent)sconsole.log("%(escapedLine)s", %(line)s);'
+           , 'javascriptreact' : '%(indent)sconsole.log("%(escapedLine)s", %(line)s);'
+           , 'javascript.jsx'  : '%(indent)sconsole.log("%(escapedLine)s", %(line)s);'
+           , 'coffee'          : '%(indent)sconsole.log "%(escapedLine)s", %(line)s'
+           , 'haskell'         : '%(indent)s(trace (show $ %(escapedLine)s) %(line)s)'
+           , 'java'            : '%(indent)sSystem.out.println("%(escapedLine)s              : " + %(line)s)'
+           , 'c'               : '%(indent)sprintf("%%s %%s", "%(escapedLine)s", %(line)s);'
+           , 'c++'             : '%(indent)scout << "%(escapedLine)s                         : " << %(line)s'
+           , 'python'          : '%(indent)sprint("%(escapedLine)s", %(line)s)'
+           , 'sh'              : '%(indent)secho \'%(line)s\' %(line)s'
+           , 'rust'            : '%(indent)sdebug!("%(line)s {}", %(line)s);'
            }
 
 filetype = vim.eval('&filetype')
@@ -741,10 +754,10 @@ endif
 
 nmap <Leader><Tab> :TagbarToggle<CR>
 
-map <silent> tw :GhcModTypeInsert<CR>
-map <silent> ts :GhcModSplitFunCase<CR>
-map <silent> tq :GhcModType<CR>
-map <silent> te :GhcModTypeClear<CR>
+" map <silent> tw :GhcModTypeInsert<CR>
+" map <silent> ts :GhcModSplitFunCase<CR>
+" map <silent> tq :GhcModType<CR>
+" map <silent> te :GhcModTypeClear<CR>
 
 " autocmd BufWritePost *.hs GhcModCheckAndLintAsync
 " autocmd BufEnter *.hs set formatprg=pointfree\ --stdin
@@ -755,13 +768,15 @@ set colorcolumn=80
 " python powerline_setup()
 " python del powerline_setup
 
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-    \| exe "normal! g'\"" | endif
-endif
+" if has("autocmd")
+"   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+"     \| exe "normal! g'\"" | endif
+" endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'sbdchd/neoformat'
 Plug 'johngrib/vim-game-code-break'
 Plug 'sdiehl/vim-ormolu'
+Plug 'vim-syntastic/syntastic'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 call plug#end()
