@@ -190,6 +190,7 @@ command! RunReactSnippet call ReactSnippet()
 command! DumpToCouch call DoDumpTextToCouch()
 
 command! -nargs=+ -complete=shellcmd RunPreview call DoRunPreview("<args>")
+
 command! -nargs=+ Search call FindInSF("<args>")
 " command! -nargs=+ Extract call ExtractFunc("<args>")
 map \\ :Search 
@@ -239,8 +240,6 @@ nmap <Leader>rp   :set ft=python<CR>:RunPreview python<CR>
 nmap <Leader>rc   :set ft=coffee<CR>:RunPreview sugar<CR>
 nmap <Leader>rh   :set ft=haskell<CR>:RunPreview runhaskell<CR>
 nmap <Leader>rj   :set ft=javascript<CR>:RunPreview node<CR>
-nmap <Leader>rdj  :set ft=javascript<CR>:RunPreview bash ~/scripts/js/vimDojoJS.sh<CR>
-nmap <Leader>rjsl :set ft=javascript<CR>:RunPreview bash ~/scripts/js/vimJSLint.sh<CR>
 nmap <Leader>rs   :set ft=scheme<CR>:RunPreview scheme --quiet<CR>
 nmap <Leader>rr   :call RunFile()<CR>
 
@@ -483,24 +482,25 @@ fu! RerunCode()
 python3 << EOF
 import vim
 filetype = vim.eval('&filetype')
-rerunCommands = { ''           :  'call RunInTmux(@%)'
-                , 'c'          :  'call RunInTmux("make")'
-                , 'c++'        :  'call RunInTmux("make")'
-                , 'cabal'      :  'call RunInTmux("cabal v2-build")'
-                , 'coffee'     :  'call ReloadChrome()'
-                , 'dot'        :  'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
-                , 'elm'        :  'call ReloadChrome()'
-                , 'dot'        :  'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
-                , 'haskell'    :  'call RunInTmux("cabal v2-build")'
-                , 'html'       :  'call ReloadChrome()'
-                , 'javascript' :  'call ReloadChrome()'
-                , 'less'       :  'call ReloadChrome()'
-                , 'make'       :  'call RunInTmux("make")'
-                , 'python'     :  'call RunInTmux("python " . @%)'
-                , 'rust'       :  'call RunInTmux("cargo build")'
-                , 'sh'         :  'call RunInTmux(@%)'
-                , 'stylus'     :  'call ReloadChrome()'
-                , 'markdown'   :  'call RunInTmux("pandoc -s -H ~/.vim/opt/pandoc.css -f markdown -t html -o " . @% . ".html " . @% . " && open " . @% . ".html")'
+rerunCommands = { ''                : 'call RunInTmux(@%)'
+                , 'c'               : 'call RunInTmux("make")'
+                , 'c++'             : 'call RunInTmux("make")'
+                , 'cabal'           : 'call RunInTmux("cabal v2-build")'
+                , 'coffee'          : 'call ReloadChrome()'
+                , 'dot'             : 'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
+                , 'elm'             : 'call ReloadChrome()'
+                , 'dot'             : 'call RunInTmux("dot -Tpng -O " . @% . " && open " . @% . ".png")'
+                , 'haskell'         : 'call RunInTmux("cabal v2-build")'
+                , 'html'            : 'call ReloadChrome()'
+                , 'javascript'      : 'call ReloadChrome()'
+                , 'javascriptreact' : 'call ReloadChrome()'
+                , 'less'            : 'call ReloadChrome()'
+                , 'make'            : 'call RunInTmux("make")'
+                , 'python'          : 'call RunInTmux("python " . @%)'
+                , 'rust'            : 'call RunInTmux("cargo build")'
+                , 'sh'              : 'call RunInTmux(@%)'
+                , 'stylus'          : 'call ReloadChrome()'
+                , 'markdown'        : 'call RunInTmux("pandoc -s -H ~/.vim/opt/pandoc.css -f markdown -t html -o " . @% . ".html " . @% . " && open " . @% . ".html")'
                 }
 try:
     command = rerunCommands[filetype]
@@ -779,4 +779,7 @@ Plug 'johngrib/vim-game-code-break'
 Plug 'sdiehl/vim-ormolu'
 Plug 'vim-syntastic/syntastic'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+Plug 'wincent/command-t', {
+    \   'do': 'cd ruby/command-t/ext/command-t && /usr/local/opt/ruby/bin/ruby extconf.rb && make'
+    \ }
 call plug#end()

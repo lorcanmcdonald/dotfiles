@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # shellcheck source=~/.bashrc
-source $HOME/.bashrc
+source "$HOME/.bashrc" 
 
-if which brew; then
+if which brew > /dev/null; then
   if [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
   fi
@@ -38,3 +38,4 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR=vim
+export BASH_SILENCE_DEPRECATION_WARNING=1

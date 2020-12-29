@@ -39,7 +39,24 @@ PERL5LIB="/Users/lorcan/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5L
 PERL_LOCAL_LIB_ROOT="/Users/lorcan/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/Users/lorcan/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/Users/lorcan/perl5"; export PERL_MM_OPT;
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && source <(kubectl completion bash)
+
+if [ -f /usr/local/etc/bash_completion ]; then
+  . /usr/local/etc/bash_completion
+else
+  echo '`bash_completion` not installed' > /dev/stderr
+fi
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export KUBECONFIG=$KUBECONFIG:$HOME/.kube/pi-config:$HOME/.kube/config
+
+# GoLang
+export GOROOT=/Users/lorcanmcdonald/.go
+export PATH=$GOROOT/bin:$PATH
+export GOPATH=
+export PATH=$GOPATH/bin:$PATH
+export PATH=$HOME/repos/stabs:$PATH
+
+# export AWS_PROFILE=saas-app-dev
+export AWS_PROFILE=saas-dataeng-dev

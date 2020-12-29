@@ -12,6 +12,8 @@ email = lorcan@lorcanmcdonald.com
     packedGitLimit = 128m
     packedGitWindowSize = 128m
 	excludesfile = /Users/lorcan.mcdonald/.gitignore_global
+	name = Lorcan McDonald
+	email = lmcdonald@vectra.ai
 
 [pack]
     deltaCacheSize = 128m
@@ -34,3 +36,8 @@ email = lorcan@lorcanmcdonald.com
 [mergetool "sourcetree"]
 	cmd = /Users/lorcan.mcdonald/Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
