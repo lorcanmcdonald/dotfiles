@@ -60,3 +60,5 @@ export PATH=$HOME/repos/stabs:$PATH
 
 # export AWS_PROFILE=saas-app-dev
 export AWS_PROFILE=saas-dataeng-dev
+
+export BASH_SILENCE_DEPRECATION_WARNING=1
