@@ -543,7 +543,14 @@ browser_command = """
 tell application "Google Chrome" to tell the active tab of its first window
     reload
 end tell
-tell application "Google Chrome" to activate
+tell application "System Events"
+    set chromeWindows to every window of (every process whose visible is true and name is "Google Chrome")
+end tell
+
+if chromeWindows is {{}} then
+    tell application "Google Chrome" to activate
+end if
+
 """
 
 call(['osascript', '-e', browser_command])
