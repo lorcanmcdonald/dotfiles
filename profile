@@ -1,13 +1,9 @@
 #!/bin/bash
 
 # shellcheck source=~/.bashrc
-source "$HOME/.bashrc" 
+source "$HOME/.bashrc"
 
-if which brew > /dev/null; then
-  if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
-  fi
-fi
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
 alias docker-env='eval $(docker-machine env default)'
 alias denv=docker-env
@@ -16,7 +12,15 @@ alias ddev='docker run --rm -ti -v "$(pwd):/home/lorcan/vol" -w /home/lorcan/vol
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
-PS1='⚒ \[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] '
+function success_indicator() {
+  if [ $? -eq 0 ] ; then
+      echo "👍"
+  else
+      echo "🤬"
+  fi
+}
+
+PS1='$(success_indicator) \[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] '
 
 alias hlint="hlint --hint=Default --hint=Dollar --hint=Generalise"
 
@@ -24,6 +28,12 @@ alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 alias chrome-canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary"
 alias fst="awk '{print \$1}'"
 alias snd="awk '{print \$2}'"
+alias dps='docker ps | fzf --header-lines=1  --preview='"'"'docker logs   $(echo {} | awk "{print \$1}")'"'"' --preview-window=follow,down,70%'
+function ihoogle() {
+  hoogle --count=100 "$@" | fzf --bind "change:reload:hoogle --count=100 {q}" --phony --preview='hoogle --info {2}' --preview-window=down,70%
+
+}
+
 
 set -o vi
 

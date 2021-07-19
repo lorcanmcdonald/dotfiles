@@ -121,6 +121,7 @@ let g:syntastic_haskell_checkers = [ 'hlint', 'scan' ]
 let g:syntastic_yaml_checkers = [ 'js-yaml' ]
 let g:syntastic_less_checkers = [ 'lessc' ]
 let g:syntastic_json_checkers = [ 'jsonlint' ]
+let g:syntastic_python_python_exec = 'python3'
 let g:syntastic_python_checkers = [ 'flake8', 'python', 'pylint' ]
 let g:syntastic_erlang_checkers = [ 'escript', 'syntaxerl' ]
 let g:syntastic_Dockerfile_checkers = [ 'dockerfile_lint' ]
@@ -243,6 +244,9 @@ nmap <Leader>rj   :set ft=javascript<CR>:RunPreview node<CR>
 nmap <Leader>rs   :set ft=scheme<CR>:RunPreview scheme --quiet<CR>
 nmap <Leader>rr   :call RunFile()<CR>
 
+vmap <Leader>mm   "ty<C-W><C-W><C-W>""<C-W><C-W>
+nmap <Leader>mm   "tyy<C-W><C-W><C-W>""<C-W><C-W>
+
 map <Leader>dc :DumpToCouch<CR>
 
 function! ImportHoogle()
@@ -304,7 +308,6 @@ augroup fmt
 augroup END
 
 autocmd bufwrite *.rs silent call FormatCode()
-" autocmd bufwrite *.hs silent call FormatCode()
 " autocmd bufwrite *.c silent call FormatCode()
 " autocmd bufwrite *.h silent call FormatCode()
 autocmd bufwrite *.js silent call FormatCode()
@@ -312,6 +315,10 @@ autocmd bufwrite *.jsx silent call FormatCode()
 autocmd bufwrite *.hs silent call FormatCode()
 autocmd bufwrite *.c silent call FormatCode()
 autocmd bufwrite *.h silent call FormatCode()
+autocmd bufwrite *.py silent call FormatCode()
+autocmd bufwrite *.md silent call FormatCode()
+autocmd bufwrite *.json silent call FormatCode()
+
 
 "Format an xml doc
 vmap <Leader>/ :Tabularize /
@@ -382,7 +389,7 @@ map   <Leader>w"     i"<ESC>gpi"<ESC>
 map   <Leader>w'     i'<ESC>gpi'<ESC>
 
 let g:CommandTFileScanner="git"
-map <Leader><Space> :CommandT<CR>
+map <Leader><Space> :FZF<CR>
 " let g:unite_source_history_yank_enable = 1
 " " call unite#filters#matcher_default#use( ['matcher_default',
 " 'matcher_hide_hidden_files', 'matcher_hide_current_file', 'matcher_fuzzy'])
@@ -559,7 +566,7 @@ EOF
 endfu
 
 fu! RunFile()
-    let commands = { "python"     : "python",
+    let commands = { "python"     : "python3",
                      "coffee"     : "sugar",
                      "haskell"    : "runhaskell",
                      "javascript" : "node",
@@ -602,9 +609,9 @@ def opposite(cssColor):
 
 loglines = { ''                : '%(indent)sprint(%(line)s)'
            , 'html'            : '%(indent)s{{debug "%(escapedLine)s" %(line)s}}'
-           , 'javascript'      : '%(indent)sconsole.log("%(escapedLine)s", %(line)s);'
-           , 'javascriptreact' : '%(indent)sconsole.log("%(escapedLine)s", %(line)s);'
-           , 'javascript.jsx'  : '%(indent)sconsole.log("%(escapedLine)s", %(line)s);'
+           , 'javascript'      : '%(indent)sconsole.log("%(escapedLine)s", %(line)s)'
+           , 'javascriptreact' : '%(indent)sconsole.log("%(escapedLine)s", %(line)s)'
+           , 'javascript.jsx'  : '%(indent)sconsole.log("%(escapedLine)s", %(line)s)'
            , 'coffee'          : '%(indent)sconsole.log "%(escapedLine)s", %(line)s'
            , 'haskell'         : '%(indent)s(trace (show $ %(escapedLine)s) %(line)s)'
            , 'java'            : '%(indent)sSystem.out.println("%(escapedLine)s              : " + %(line)s)'
@@ -781,6 +788,76 @@ set colorcolumn=80
 "     \| exe "normal! g'\"" | endif
 " endif
 
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
+
+let g:fzf_colors =
+      \ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+
 call plug#begin('~/.vim/plugged')
 Plug 'sbdchd/neoformat'
 Plug 'johngrib/vim-game-code-break'
@@ -790,4 +867,6 @@ Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'wincent/command-t', {
     \   'do': 'cd ruby/command-t/ext/command-t && /usr/local/opt/ruby/bin/ruby extconf.rb && make'
     \ }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug '/usr/local/opt/fzf'
 call plug#end()

@@ -8,6 +8,9 @@ export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:/usr/local/bin"
 alias timestamp='date +"%s"'
 alias log='git log --graph --decorate --pretty=oneline --abbrev-commit'
+alias review='git diff $(git status --porcelain | fzf | sed "s/^...//" )'
+alias rev=review
+alias add='git add $(git status --porcelain | fzf -m --color bg:#222222,preview-bg:#333333 --preview="echo {} | sed "s/^...//"| xargs git diff --color" | sed "s/^...//"); git status'
 
 export NVM_DIR="/Users/lorcan/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -57,8 +60,11 @@ export PATH=$GOROOT/bin:$PATH
 export GOPATH=
 export PATH=$GOPATH/bin:$PATH
 export PATH=$HOME/repos/stabs:$PATH
+export PATH=$PATH:$HOME/Library/Python/3.9/bin
 
 # export AWS_PROFILE=saas-app-dev
-export AWS_PROFILE=saas-dataeng-dev
+# export AWS_PROFILE=saas-dataeng-dev
+export AWS_PROFILE=bastion-mfa
+export DEV_USER=lmcdonald
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
