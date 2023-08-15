@@ -1,0 +1,16 @@
+#!/bin/bash
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install fzf vim
+brew install --cask docker
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
+nvm install --lts
+nvm use --lts
+pip3 install diff-highlight
+docker
+# Apple Silicon specific
+/opt/homebrew/opt/fzf/install
+
+[ ! -f ~/.ssh/id_ed25519 ] && ssh-keygen -t ed25519 -C "lorcan@lorcanmcdonald.com"
+
+vim +'PlugInstall --sync' +qa

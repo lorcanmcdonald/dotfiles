@@ -389,7 +389,7 @@ map   <Leader>w"     i"<ESC>gpi"<ESC>
 map   <Leader>w'     i'<ESC>gpi'<ESC>
 
 let g:CommandTFileScanner="git"
-map <Leader><Space> :FZF<CR>
+map <Leader><Space> :Files<CR>
 " let g:unite_source_history_yank_enable = 1
 " " call unite#filters#matcher_default#use( ['matcher_default',
 " 'matcher_hide_hidden_files', 'matcher_hide_current_file', 'matcher_fuzzy'])
@@ -868,5 +868,6 @@ Plug 'wincent/command-t', {
     \   'do': 'cd ruby/command-t/ext/command-t && /usr/local/opt/ruby/bin/ruby extconf.rb && make'
     \ }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug '/usr/local/opt/fzf'
+Plug '/opt/homebrew/opt/fzf'
+Plug 'junegunn/fzf.vim'
 call plug#end()

@@ -4,6 +4,8 @@ IFS=$'\n\t'
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+source "$DIR/macos-install-deps"
+
 DOTFILES=("bashrc" \
   "emacs" \
   "gitconfig" \

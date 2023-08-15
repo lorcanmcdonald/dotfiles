@@ -45,11 +45,6 @@ PERL_MM_OPT="INSTALL_BASE=/Users/lorcan/perl5"; export PERL_MM_OPT;
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && source <(kubectl completion bash)
 
-if [ -f /usr/local/etc/bash_completion ]; then
-  . /usr/local/etc/bash_completion
-else
-  echo '`bash_completion` not installed' > /dev/stderr
-fi
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export KUBECONFIG=$KUBECONFIG:$HOME/.kube/pi-config:$HOME/.kube/config
@@ -68,3 +63,5 @@ export AWS_PROFILE=bastion-mfa
 export DEV_USER=lmcdonald
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

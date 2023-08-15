@@ -3,7 +3,7 @@
 # shellcheck source=~/.bashrc
 source "$HOME/.bashrc"
 
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
 
 alias docker-env='eval $(docker-machine env default)'
 alias denv=docker-env
@@ -49,4 +49,4 @@ export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR=vim
 
-[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
