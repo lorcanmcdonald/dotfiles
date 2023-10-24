@@ -1,15 +1,34 @@
 #!/bin/bash
 
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install fzf vim
+brew install \
+  ansible \
+  fzf \
+  node_exporter \
+  spaceship \
+  sshpass \
+  turbot/tap/steampipe \
+  vim \
+  shellcheck \
+  watch
+
 brew install --cask docker
+# nvm nodejs
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
 nvm install --lts
 nvm use --lts
+
+# ghcup
+# brew install llvm
+curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+cabal install ghcid
+
 pip3 install diff-highlight
+
 docker
+
 # Apple Silicon specific
-/opt/homebrew/opt/fzf/install
+$(brew --prefix)/opt/fzf/install
 
 [ ! -f ~/.ssh/id_ed25519 ] && ssh-keygen -t ed25519 -C "lorcan@lorcanmcdonald.com"
 

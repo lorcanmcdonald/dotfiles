@@ -858,6 +858,10 @@ let g:fzf_colors =
   \ 'header':  ['fg', 'Comment'] }
 
 
+autocmd BufRead,BufNewFile $KB_DIRECTORY* setlocal path+=$KB_DIRECTORY/**
+
+set suffixesadd+=.md
+
 call plug#begin('~/.vim/plugged')
 Plug 'sbdchd/neoformat'
 Plug 'johngrib/vim-game-code-break'
