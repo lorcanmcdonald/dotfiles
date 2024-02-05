@@ -22,7 +22,6 @@ function link_dotfile {
   SOURCE="$DIR/$DOTFILE"
   TARGET="$HOME/.$DOTFILE"
 
-
   if [ -e "$TARGET" ]; then
     if [ ! -h "$TARGET" ]; then
       echo "[33m$TARGET[0m is a regular file. Skipping..."
@@ -37,3 +36,6 @@ function link_dotfile {
 for DOTFILE in "${DOTFILES[@]}"; do
   link_dotfile "$DOTFILE"
 done
+
+mkdir -p "$HOME/.local/bin/"
+find "$DIR/bin" -print0 -type f | xargs -0 -I {} ln -s {} "$HOME/.local/bin/"

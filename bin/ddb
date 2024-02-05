@@ -1,0 +1,53 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+
+STDIN=$(cat "${1:-/dev/stdin}")
+file_type=$(printf '%s' "$STDIN" | file - | awk -F ": " '{print $2}' )
+
+case $file_type in
+  'CSV text')
+    format=csv
+    ;;
+  'JSON data')
+    format=json
+    ;;
+  'ASCII text' | 'Unicode text, UTF-8 text')
+    set +e
+    if echo "$STDIN" | awk -F '	' '{print NF}' | sort | uniq | wc -l | grep '^ *1$'; then
+      format=csv
+    elif echo "$STDIN" | jq . > /dev/null; then
+      format=json
+    else
+      format=json
+      STDIN=$(echo "$STDIN" \
+        | yq -o=json)
+    fi
+
+    set -e
+    ;;
+  *)
+    >&2 echo "File type '$file_type' not recognised"
+    exit 1
+esac
+
+tmpdir=$(mktemp -d /tmp/ddb-scratch.XXXXXX)
+echo "$STDIN" \
+  | duckdb \
+    "$tmpdir/db.duck" \
+    "CREATE TABLE tbl AS FROM read_${format}_auto('/dev/stdin'); \
+    SELECT * from tbl LIMIT 10; "
+
+
+>&2 echo "SELECT * from tbl LIMIT 10; "
+duckdb -interactive "$tmpdir/db.duck"
+
+echo '$file_type' "$file_type"
+
+rm -r "$tmpdir"
+>&2 echo "\$tmpdir" "$tmpdir"
+# shellcheck disable=SC2016
+>&2 echo '$file_type' "$file_type"
+>&2 echo '$format' "$format" #ignore [SC2016]
