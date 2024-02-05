@@ -6,23 +6,29 @@ brew install \
   duckdb \
   fzf \
   node_exporter \
+  pyenv \
+  pkg-config \
+  shellcheck \
   spaceship \
-  sshpass \
   turbot/tap/steampipe \
   vim \
-  shellcheck \
   watch
 
 brew install --cask docker
 # nvm nodejs
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 nvm install --lts
 nvm use --lts
 
 # ghcup
 # brew install llvm
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
-cabal install ghcid
+cabal install ghcid hoogle ormolu
 
 pip3 install diff-highlight
 
@@ -34,3 +40,4 @@ $(brew --prefix)/opt/fzf/install
 [ ! -f ~/.ssh/id_ed25519 ] && ssh-keygen -t ed25519 -C "lorcan@lorcanmcdonald.com"
 
 vim +'PlugInstall --sync' +qa
+nvim +'PlugInstall --sync' +qa
