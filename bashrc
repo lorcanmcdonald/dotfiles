@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export EDITOR=vim
+export PATH="$PATH:$HOME/.ghcup/bin"
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:$HOME/.cabal/bin"
 export PATH="$PATH:$HOME/.aws/bin"
