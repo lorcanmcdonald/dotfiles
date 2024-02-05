@@ -618,7 +618,7 @@ loglines = { ''                : '%(indent)sprint(%(line)s)'
            , 'c'               : '%(indent)sprintf("%%s %%s", "%(escapedLine)s", %(line)s);'
            , 'c++'             : '%(indent)scout << "%(escapedLine)s                         : " << %(line)s'
            , 'python'          : '%(indent)sprint("%(escapedLine)s", %(line)s)'
-           , 'sh'              : '%(indent)secho \'%(line)s\' %(line)s'
+           , 'sh'              : '%(indent)secho \'%(line)s\' "%(line)s" # '
            , 'rust'            : '%(indent)sdebug!("%(line)s {}", %(line)s);'
            }
 
