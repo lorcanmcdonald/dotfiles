@@ -1,8 +1,8 @@
 .DS_Store
 **/tags
-vim/tmp/
-vim/undo/
-vim/sessions
-vim/.VimballRecord
-vim/.netrwhist
-vim/plugged/
+pkg-vim/.vim/tmp/
+pkg-vim/.vim/undo/
+pkg-vim/.vim/sessions
+pkg-vim/.vim/.VimballRecord
+pkg-vim/.vim/.netrwhist
+pkg-vim/.vim/plugged/
